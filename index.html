@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="icon" href="https://play-lh.googleusercontent.com/VLRYN0xDfFSNg1_ynVdxDz7lVGt9CPXm0FqQH3gE2mVQJSR1HWz8Bp-cG0iWjJp6kA=w192-h192">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>PATH Realtime</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -16,7 +22,7 @@
     
   ></script>
 
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <link rel="stylesheet" type="text/css" href="/DarkReader-surajjdsouza-github-io.css">
 
 
   <style id="compiled-css" type="text/css">
@@ -28,6 +34,7 @@
   border: 1px solid rgba(0, 0, 0, 0.12);
   margin: 2px;
 }
+
 
 
     /* EOS */
@@ -50,9 +57,6 @@
   </head>
   <body>
     <div id="app">
-      <!--md-toolbar :md-elevation="1">
-        <span class="md-title">Realtime PATH Arrival Times</span>
-      </md-toolbar-->
       <md-list class="md-double-line" v-for="station in stations">
         <md-subheader>{{ station.name }}</md-subheader>
 
@@ -79,9 +83,103 @@
   </body>
 </html>
 
-
     <script type="text/javascript">//<![CDATA[
-Vue.use(VueMaterial.default),new Vue({el:"#app",data:{timer:"",stations:{newark:{name:"Newark Penn",trains:[]},harrison:{name:"Harrison",trains:[]},journal_square:{name:"Journal Square",trains:[]},grove_street:{name:"Grove Street",trains:[]},exchange_place:{name:"Exchange Place",trains:[]},world_trade_center:{name:"World Trace Center",trains:[]},newport:{name:"Newport",trains:[]},hoboken:{name:"Hoboken",trains:[]},christopher_street:{name:"Christopher Street",trains:[]},ninth_street:{name:"9th Street",trains:[]},fourteenth_street:{name:"14th Street",trains:[]},twenty_third_street:{name:"23rd Street",trains:[]},thirty_third_street:{name:"33rd Street",trains:[]}}},created:function(){this.fetchStations(),this.timer=setInterval(this.fetchStations,5e3)},methods:{fetchStations:function(){for(var t in this.stations)this.$http.get("https://path.api.razza.dev/v1/stations/"+t+"/realtime").then(function(t){return function(e){this.stations[t].trains=e.body.upcomingTrains.sort((function(t,e){return Date.parse(t.projectedArrival)-Date.parse(e.projectedArrival)})).map((function(t){return{name:t.lineName,arrival_time:moment(Date.parse(t.projectedArrival)).fromNow()}}))}}(t))}},beforeDestroy(){clearInterval(this.timer)}});  //]]></script>
+Vue.use(VueMaterial.default);
+
+new Vue({
+  el: '#app',
+  data: {
+    timer: '',
+    stations: {
+      "newark": {
+        name: "Newark Penn",
+        trains: []
+      },
+      "harrison": {
+        name: "Harrison",
+        trains: []
+      },
+      "journal_square": {
+        name: "Journal Square",
+        trains: []
+      },
+      "grove_street": {
+        name: "Grove Street",
+        trains: []
+      },
+      "exchange_place": {
+        name: "Exchange Place",
+        trains: []
+      },
+      "world_trade_center": {
+        name: "World Trace Center",
+        trains: []
+      },
+      "newport": {
+        name: "Newport",
+        trains: []
+      },
+      "hoboken": {
+        name: "Hoboken",
+        trains: []
+      },
+      "christopher_street": {
+        name: "Christopher Street",
+        trains: []
+      },
+      "ninth_street": {
+        name: "9th Street",
+        trains: []
+      },
+      "fourteenth_street": {
+        name: "14th Street",
+        trains: []
+      },
+      "twenty_third_street": {
+        name: "23rd Street",
+        trains: []
+      },
+      "thirty_third_street": {
+        name: "33rd Street",
+        trains: []
+      }
+    }
+  },
+  created: function() {
+    this.fetchStations();
+	this.loadCSS();
+    this.timer = setInterval(this.fetchStations, 5000)
+  },
+  methods: {
+    fetchStations: function() {
+      for (var curr_station in this.stations) {
+        this.$http.get("https://path.api.razza.dev/v1/stations/" + curr_station + "/realtime").then((function(station) {
+          return function(result) {
+            this.stations[station].trains = result.body.upcomingTrains.sort(function(a, b) {
+              return Date.parse(a.projectedArrival) - Date.parse(b.projectedArrival);
+            }).map(function(train) {
+              return {
+                name: train.lineName,
+                arrival_time: moment(Date.parse(train.projectedArrival)).fromNow()
+              };
+            });
+          }
+        })(curr_station));
+      }
+    },
+	loadCSS: function() {
+      var file = document.createElement("link");
+      file.setAttribute("rel", "stylesheet");
+      file.setAttribute("type", "text/css");
+      file.setAttribute("href", "/DarkReader-surajjdsouza-github-io.css");
+      document.head.appendChild(file);
+	}
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  }
+});
+  //]]></script>
 
   <script>
     // tell the embed parent frame the height of the content
