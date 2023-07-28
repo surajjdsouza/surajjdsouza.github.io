@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="icon" href="https://play-lh.googleusercontent.com/VLRYN0xDfFSNg1_ynVdxDz7lVGt9CPXm0FqQH3gE2mVQJSR1HWz8Bp-cG0iWjJp6kA=w192-h192">
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>PATH Realtime Arraival</title>
+  <title>PATH Realtime</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
@@ -35,80 +36,7 @@
   <script id="insert"></script>
 
     <script src="/js/stringify.js?5e334e8f3e0220d567896ef271cc68937a903779" charset="utf-8"></script>
-    <script>
-      const customConsole = (w) => {
-        const pushToConsole = (payload, type) => {
-          w.parent.postMessage({
-            console: {
-              payload: stringify(payload),
-              type:    type
-            }
-          }, "*")
-        }
-
-        w.onerror = (message, url, line, column) => {
-          // the line needs to correspond with the editor panel
-          // unfortunately this number needs to be altered every time this view is changed
-          line = line - 70
-          if (line < 0){
-            pushToConsole(message, "error")
-          } else {
-            pushToConsole(`[${line}:${column}] ${message}`, "error")
-          }
-        }
-
-        let console = (function(systemConsole){
-          return {
-            log: function(){
-              let args = Array.from(arguments)
-              pushToConsole(args, "log")
-              systemConsole.log.apply(this, args)
-            },
-            info: function(){
-              let args = Array.from(arguments)
-              pushToConsole(args, "info")
-              systemConsole.info.apply(this, args)
-            },
-            warn: function(){
-              let args = Array.from(arguments)
-              pushToConsole(args, "warn")
-              systemConsole.warn.apply(this, args)
-            },
-            error: function(){
-              let args = Array.from(arguments)
-              pushToConsole(args, "error")
-              systemConsole.error.apply(this, args)
-            },
-            system: function(arg){
-              pushToConsole(arg, "system")
-            },
-            clear: function(){
-              systemConsole.clear.apply(this, {})
-            },
-            time: function(){
-              let args = Array.from(arguments)
-              systemConsole.time.apply(this, args)
-            },
-            assert: function(assertion, label){
-              if (!assertion){
-                pushToConsole(label, "log")
-              }
-
-              let args = Array.from(arguments)
-              systemConsole.assert.apply(this, args)
-            }
-          }
-        }(window.console))
-
-        window.console = { ...window.console, ...console }
-
-        console.system("Running fiddle")
-      }
-
-      if (window.parent){
-        customConsole(window)
-      }
-    </script>
+    <script>Vue.use(VueMaterial.default),new Vue({el:"#app",data:{timer:"",stations:{newark:{name:"Newark Penn",trains:[]},harrison:{name:"Harrison",trains:[]},journal_square:{name:"Journal Square",trains:[]},grove_street:{name:"Grove Street",trains:[]},exchange_place:{name:"Exchange Place",trains:[]},world_trade_center:{name:"World Trace Center",trains:[]},newport:{name:"Newport",trains:[]},hoboken:{name:"Hoboken",trains:[]},christopher_street:{name:"Christopher Street",trains:[]},ninth_street:{name:"9th Street",trains:[]},fourteenth_street:{name:"14th Street",trains:[]},twenty_third_street:{name:"23rd Street",trains:[]},thirty_third_street:{name:"33rd Street",trains:[]}}},created:function(){this.fetchStations(),this.timer=setInterval(this.fetchStations,5e3)},methods:{fetchStations:function(){for(var t in this.stations)this.$http.get("https://path.api.razza.dev/v1/stations/"+t+"/realtime").then(function(t){return function(e){this.stations[t].trains=e.body.upcomingTrains.sort((function(t,e){return Date.parse(t.projectedArrival)-Date.parse(e.projectedArrival)})).map((function(t){return{name:t.lineName,arrival_time:moment(Date.parse(t.projectedArrival)).fromNow()}}))}}(t))}},beforeDestroy(){clearInterval(this.timer)}});</script>
 </head>
 <body>
     <!doctype html>
@@ -122,9 +50,9 @@
   </head>
   <body>
     <div id="app">
-      <md-toolbar :md-elevation="1">
+      <!--md-toolbar :md-elevation="1">
         <span class="md-title">Realtime PATH Arrival Times</span>
-      </md-toolbar>
+      </md-toolbar-->
       <md-list class="md-double-line" v-for="station in stations">
         <md-subheader>{{ station.name }}</md-subheader>
 
