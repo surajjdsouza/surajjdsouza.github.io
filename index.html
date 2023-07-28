@@ -1,4 +1,117 @@
-<!doctype html>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>PATH Realtime Arraival</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <script
+    type="text/javascript"
+    src="/js/lib/dummy.js"
+    
+  ></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+
+  <style id="compiled-css" type="text/css">
+    .md-list.md-double-line {
+  width: 520px;
+  max-width: 100%;
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 2px;
+}
+
+
+    /* EOS */
+  </style>
+
+  <script id="insert"></script>
+
+    <script src="/js/stringify.js?5e334e8f3e0220d567896ef271cc68937a903779" charset="utf-8"></script>
+    <script>
+      const customConsole = (w) => {
+        const pushToConsole = (payload, type) => {
+          w.parent.postMessage({
+            console: {
+              payload: stringify(payload),
+              type:    type
+            }
+          }, "*")
+        }
+
+        w.onerror = (message, url, line, column) => {
+          // the line needs to correspond with the editor panel
+          // unfortunately this number needs to be altered every time this view is changed
+          line = line - 70
+          if (line < 0){
+            pushToConsole(message, "error")
+          } else {
+            pushToConsole(`[${line}:${column}] ${message}`, "error")
+          }
+        }
+
+        let console = (function(systemConsole){
+          return {
+            log: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "log")
+              systemConsole.log.apply(this, args)
+            },
+            info: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "info")
+              systemConsole.info.apply(this, args)
+            },
+            warn: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "warn")
+              systemConsole.warn.apply(this, args)
+            },
+            error: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "error")
+              systemConsole.error.apply(this, args)
+            },
+            system: function(arg){
+              pushToConsole(arg, "system")
+            },
+            clear: function(){
+              systemConsole.clear.apply(this, {})
+            },
+            time: function(){
+              let args = Array.from(arguments)
+              systemConsole.time.apply(this, args)
+            },
+            assert: function(assertion, label){
+              if (!assertion){
+                pushToConsole(label, "log")
+              }
+
+              let args = Array.from(arguments)
+              systemConsole.assert.apply(this, args)
+            }
+          }
+        }(window.console))
+
+        window.console = { ...window.console, ...console }
+
+        console.system("Running fiddle")
+      }
+
+      if (window.parent){
+        customConsole(window)
+      }
+    </script>
+</head>
+<body>
+    <!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -11,7 +124,6 @@
     <div id="app">
       <md-toolbar :md-elevation="1">
         <span class="md-title">Realtime PATH Arrival Times</span>
-        <md-subheader>by&nbsp;<a href="https://razza.dev" target="_blank">Matt Razza</a>&nbsp;| Data quality is not guaranteed. This is not affiliated with PATH or PANYNJ.</md-subheader>
       </md-toolbar>
       <md-list class="md-double-line" v-for="station in stations">
         <md-subheader>{{ station.name }}</md-subheader>
@@ -37,4 +149,133 @@
     <script src="https://unpkg.com/vue-material@beta"></script>
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
   </body>
+</html>
+
+
+    <script type="text/javascript">//<![CDATA[
+
+
+Vue.use(VueMaterial.default);
+
+new Vue({
+  el: '#app',
+  data: {
+    timer: '',
+    stations: {
+      "newark": {
+        name: "Newark Penn",
+        trains: []
+      },
+      "harrison": {
+        name: "Harrison",
+        trains: []
+      },
+      "journal_square": {
+        name: "Journal Square",
+        trains: []
+      },
+      "grove_street": {
+        name: "Grove Street",
+        trains: []
+      },
+      "exchange_place": {
+        name: "Exchange Place",
+        trains: []
+      },
+      "world_trade_center": {
+        name: "World Trace Center",
+        trains: []
+      },
+      "newport": {
+        name: "Newport",
+        trains: []
+      },
+      "hoboken": {
+        name: "Hoboken",
+        trains: []
+      },
+      "christopher_street": {
+        name: "Christopher Street",
+        trains: []
+      },
+      "ninth_street": {
+        name: "9th Street",
+        trains: []
+      },
+      "fourteenth_street": {
+        name: "14th Street",
+        trains: []
+      },
+      "twenty_third_street": {
+        name: "23rd Street",
+        trains: []
+      },
+      "thirty_third_street": {
+        name: "33rd Street",
+        trains: []
+      }
+    }
+  },
+  created: function() {
+    this.fetchStations();
+    this.timer = setInterval(this.fetchStations, 5000)
+  },
+  methods: {
+    fetchStations: function() {
+      for (var curr_station in this.stations) {
+        this.$http.get("https://path.api.razza.dev/v1/stations/" + curr_station + "/realtime").then((function(station) {
+          return function(result) {
+            this.stations[station].trains = result.body.upcomingTrains.sort(function(a, b) {
+              return Date.parse(a.projectedArrival) - Date.parse(b.projectedArrival);
+            }).map(function(train) {
+              return {
+                name: train.lineName,
+                arrival_time: moment(Date.parse(train.projectedArrival)).fromNow()
+              };
+            });
+          }
+        })(curr_station));
+      }
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  }
+});
+
+
+
+  //]]></script>
+
+  <script>
+    // tell the embed parent frame the height of the content
+    if (window.parent && window.parent.parent){
+      window.parent.parent.postMessage(["resultsFrame", {
+        height: document.body.getBoundingClientRect().height,
+        slug: "c8pgra7m"
+      }], "*")
+    }
+
+    // always overwrite window.name, in case users try to set it manually
+    window.name = "result"
+  </script>
+
+    <script>
+      let allLines = []
+
+      window.addEventListener("message", (message) => {
+        if (message.data.console){
+          let insert = document.querySelector("#insert")
+          allLines.push(message.data.console.payload)
+          insert.innerHTML = allLines.join(";\r")
+
+          let result = eval.call(null, message.data.console.payload)
+          if (result !== undefined){
+            console.log(result)
+          }
+        }
+      })
+    </script>
+
+</body>
 </html>
