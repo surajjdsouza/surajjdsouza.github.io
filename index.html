@@ -1,1 +1,40 @@
-TEST
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+  </head>
+  <body>
+    <div id="app">
+      <md-toolbar :md-elevation="1">
+        <span class="md-title">Realtime PATH Arrival Times</span>
+        <md-subheader>by&nbsp;<a href="https://razza.dev" target="_blank">Matt Razza</a>&nbsp;| Data quality is not guaranteed. This is not affiliated with PATH or PANYNJ.</md-subheader>
+      </md-toolbar>
+      <md-list class="md-double-line" v-for="station in stations">
+        <md-subheader>{{ station.name }}</md-subheader>
+
+        <md-divider></md-divider>
+
+        <md-list-item v-for="train in station.trains">
+          <md-icon class="md-primary">train</md-icon>
+
+          <div class="md-list-item-text">
+            <span>{{ train.name }}</span>
+          </div>
+
+          <div class="md-list-action">
+            <span>{{ train.arrival_time }}</span>
+          </div>
+        </md-list-item>
+      </md-list>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <script src="https://unpkg.com/vue-material@beta"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+  </body>
+</html>
