@@ -57,26 +57,22 @@
   </head>
   <body>
     <div id="app">
-      <md-list md-expand-single="true" class="md-double-line" v-for="station in stations">
-        <md-list-item md-expand>
-		<span class="md-list-item-text">{{ station.name }}</span>
+      <md-list class="md-double-line" v-for="station in stations">
+        <md-subheader>{{ station.name }}</md-subheader>
 
         <md-divider></md-divider>
 
-			<md-list slot="md-expand">
-				<md-list-item v-for="train in station.trains">
-				  <md-icon class="md-primary">train</md-icon>
+        <md-list-item v-for="train in station.trains">
+          <md-icon class="md-primary">train</md-icon>
 
-				  <div class="md-list-item-text">
-					<span>{{ train.name }}</span>
-				  </div>
+          <div class="md-list-item-text">
+            <span>{{ train.name }}</span>
+          </div>
 
-				  <div class="md-list-action">
-					<span>{{ train.arrival_time }}</span>
-				  </div>
-				</md-list-item>
-			</md-list>
-		</md-list-item>
+          <div class="md-list-action">
+            <span>{{ train.arrival_time }}</span>
+          </div>
+        </md-list-item>
       </md-list>
     </div>
 
