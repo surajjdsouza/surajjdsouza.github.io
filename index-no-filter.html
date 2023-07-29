@@ -34,12 +34,7 @@
   border: 1px solid rgba(0, 0, 0, 0.12);
   margin: 2px;
 }
-    .direction {
-	display:flex;
-	justify-content: center !important;
-	background-color: black;
-	font-size: 125%;
-}
+
 
 
     /* EOS */
@@ -48,6 +43,7 @@
   <script id="insert"></script>
 
     <script src="/js/stringify.js?5e334e8f3e0220d567896ef271cc68937a903779" charset="utf-8"></script>
+    <!-- <script>Vue.use(VueMaterial.default),new Vue({el:"#app",data:{timer:"",stations:{newark:{name:"Newark Penn",trains:[]},harrison:{name:"Harrison",trains:[]},journal_square:{name:"Journal Square",trains:[]},grove_street:{name:"Grove Street",trains:[]},exchange_place:{name:"Exchange Place",trains:[]},world_trade_center:{name:"World Trace Center",trains:[]},newport:{name:"Newport",trains:[]},hoboken:{name:"Hoboken",trains:[]},christopher_street:{name:"Christopher Street",trains:[]},ninth_street:{name:"9th Street",trains:[]},fourteenth_street:{name:"14th Street",trains:[]},twenty_third_street:{name:"23rd Street",trains:[]},thirty_third_street:{name:"33rd Street",trains:[]}}},created:function(){this.fetchStations(),this.timer=setInterval(this.fetchStations,5e3)},methods:{fetchStations:function(){for(var t in this.stations)this.$http.get("https://path.api.razza.dev/v1/stations/"+t+"/realtime").then(function(t){return function(e){this.stations[t].trains=e.body.upcomingTrains.sort((function(t,e){return Date.parse(t.projectedArrival)-Date.parse(e.projectedArrival)})).map((function(t){return{name:t.lineName,arrival_time:moment(Date.parse(t.projectedArrival)).fromNow()}}))}}(t))}},beforeDestroy(){clearInterval(this.timer)}});</script> -->
 </head>
 <body>
     <!doctype html>
@@ -66,19 +62,9 @@
 		<span class="md-list-item-text" :id="station.name">{{ station.name }}</span>
         <md-divider></md-divider>
 			<md-list slot="md-expand">
-				<span class="direction">Trains to NYC</span>
-				<md-list-item v-for="train in station.trainsNY">
+				<md-list-item v-for="train in station.trains">
 				  <md-icon class="md-primary" :style="train.color">circle</md-icon>
-				  <div class="md-list-item-text">
-					<span>{{ train.name }}</span>
-				  </div>
-				  <div class="md-list-action">
-					<span>{{ train.arrival_time }}</span>
-				  </div>
-				</md-list-item>
-				<span class="direction">Trains to NJ</span>
-				<md-list-item v-for="train in station.trainsNJ">
-				  <md-icon class="md-primary" :style="train.color">circle</md-icon>
+
 				  <div class="md-list-item-text">
 					<span>{{ train.name }}</span>
 				  </div>
@@ -100,117 +86,7 @@
 </html>
 
     <script type="text/javascript">//<![CDATA[
-Vue.use(VueMaterial.default), new Vue({
-  el: "#app",
-  data: {
-    timer: "",
-    stations: {
-      newark: {
-        name: "Newark Penn",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      harrison: {
-        name: "Harrison",
-        trainsNY: [],
-      },
-      journal_square: {
-        name: "Journal Square",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      grove_street: {
-        name: "Grove Street",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      exchange_place: {
-        name: "Exchange Place",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      world_trade_center: {
-        name: "World Trade Center",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      newport: {
-        name: "Newport",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      hoboken: {
-        name: "Hoboken",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      christopher_street: {
-        name: "Christopher Street",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      ninth_street: {
-        name: "9th Street",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      fourteenth_street: {
-        name: "14th Street",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      twenty_third_street: {
-        name: "23rd Street",
-        trainsNY: [],
-		trainsNJ: []
-      },
-      thirty_third_street: {
-        name: "33rd Street",
-        trainsNY: [],
-		trainsNJ: []
-      }
-    }
-  },
-  created: function() {
-    this.fetchStations(), this.timer = setInterval(this.fetchStations, 5e3)
-  },
-  methods: {
-    fetchStations: function() {
-      for (var t in this.stations) this.$http.get("https://path.api.razza.dev/v1/stations/" + t + "/realtime").then(function(t) {
-        return function(e) {
-          this.stations[t].trainsNY = e.body.upcomingTrains.filter(function(t) {
-		    return t.direction == "TO_NY"
-		  }).sort((function(t, e) {
-            return Date.parse(t.projectedArrival) - Date.parse(e.projectedArrival)
-          })).map((function(t) {
-            return {
-              name: t.lineName,
-              arrival_time: moment(Date.parse(t.projectedArrival)).fromNow(),
-              color: "color:"+t.lineColors[0]+"!important",
-              direction: t.direction
-            }
-          }))
-          this.stations[t].trainsNJ = e.body.upcomingTrains.filter(function(t) {
-		    return t.direction == "TO_NJ"
-		  }).sort((function(t, e) {
-            return Date.parse(t.projectedArrival) - Date.parse(e.projectedArrival)
-          })).map((function(t) {
-            return {
-              name: t.lineName,
-              arrival_time: moment(Date.parse(t.projectedArrival)).fromNow(),
-              color: "color:"+t.lineColors[0]+"!important",
-              direction: t.direction
-            }
-          }))
-        }
-      }(t))
-    }
-  },
-  beforeDestroy() {
-    clearInterval(this.timer)
-  }
-});
-  //]]></script>
+Vue.use(VueMaterial.default),new Vue({el:"#app",data:{timer:"",stations:{newark:{name:"Newark Penn",trains:[]},harrison:{name:"Harrison",trains:[]},journal_square:{name:"Journal Square",trains:[]},grove_street:{name:"Grove Street",trains:[]},exchange_place:{name:"Exchange Place",trains:[]},world_trade_center:{name:"World Trade Center",trains:[]},newport:{name:"Newport",trains:[]},hoboken:{name:"Hoboken",trains:[]},christopher_street:{name:"Christopher Street",trains:[]},ninth_street:{name:"9th Street",trains:[]},fourteenth_street:{name:"14th Street",trains:[]},twenty_third_street:{name:"23rd Street",trains:[]},thirty_third_street:{name:"33rd Street",trains:[]}}},created:function(){this.fetchStations(),this.timer=setInterval(this.fetchStations,5e3)},methods:{fetchStations:function(){for(var t in this.stations)this.$http.get("https://path.api.razza.dev/v1/stations/"+t+"/realtime").then(function(t){return function(e){this.stations[t].trains=e.body.upcomingTrains.sort((function(t,e){return Date.parse(t.projectedArrival)-Date.parse(e.projectedArrival)})).map((function(t){return{name:t.lineName,arrival_time:moment(Date.parse(t.projectedArrival)).fromNow(),color:"color:"+t.lineColors[0]+"!important",direction:t.direction}}))}}(t))}},beforeDestroy(){clearInterval(this.timer)}});  //]]></script>
 
   <script>
     // tell the embed parent frame the height of the content
