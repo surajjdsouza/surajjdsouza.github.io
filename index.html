@@ -34,9 +34,9 @@
     .direction {
 	display:flex;
 	justify-content: center;
-	background-color: black;
 	font-size: 150%;
 	min-height: 5vh;
+	background-color: md-theme-default-accent;
 	align-items: center;
 }
 
@@ -62,10 +62,10 @@
     <div id="app">
       <md-list md-expand-single="true" class="md-double-line" v-for="station in stations">
         <md-list-item md-expand>
-		<span class="md-list-item-text" :id="station.name">{{ station.name }}</span>
+		<span class="md-list-item-text " :id="station.name">{{ station.name }}</span>
         <md-divider></md-divider>
 			<md-list slot="md-expand">
-				<span class="direction">Trains to NYC&nbsp;<span class="material-icons-outlined">arrow_circle_right</span></span>
+				<span class="direction md-elevation-4">Trains to NYC&nbsp;<span class="material-icons-outlined">arrow_circle_right</span></span>
 				<md-list-item v-for="train in station.trainsNY">
 				  <md-icon class="md-primary" :style="train.color">train</md-icon>
 				  <div class="md-list-item-text">
@@ -75,7 +75,7 @@
 					<span>{{ train.arrival_time }}</span>
 				  </div>
 				</md-list-item>
-				<span class="direction"><span class="material-icons-outlined">arrow_circle_left</span>&nbsp;Trains to NJ</span>
+				<span class="direction md-elevation-4"><span class="material-icons-outlined">arrow_circle_left</span>&nbsp;Trains to NJ</span>
 				<md-list-item v-for="train in station.trainsNJ">
 				  <md-icon class="md-primary" :style="train.color">train</md-icon>
 				  <div class="md-list-item-text">
